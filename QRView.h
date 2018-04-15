@@ -34,4 +34,7 @@ IB_DESIGNABLE
 // L: 7%, M: 15%, Q: 25%, or H: 30%. Defaults to M.
 @property (nonatomic, copy) IBInspectable NSString *correctionLevel;
 
+// "Pixel perfect" UIImage of the QRCode
+- (UIImage *)qrImage;
+
 @end
