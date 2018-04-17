@@ -45,27 +45,18 @@
 
 - (UIImage *)qrImage;
 {
-    return [UIImage imageWithCIImage:self.outputImage];
-}
-
-- (void)drawRect:(CGRect)rect;
-{
-    CIImage *outputImage = self.outputImage;
-    CGImageRef image = [CIContext.new createCGImage:outputImage fromRect:outputImage.extent];
-    CGContextSetInterpolationQuality(UIGraphicsGetCurrentContext(), kCGInterpolationNone);
-    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1, -1);
-    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0, -rect.size.height);
-    CGContextDrawImage(UIGraphicsGetCurrentContext(), AVMakeRectWithAspectRatioInsideRect(CGSizeMake(1, 1), rect), image);
-    CGImageRelease(image);
-}
-
-- (CIImage *)outputImage;
-{
     CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
     [filter setValue:[self.message ?: @"" dataUsingEncoding:NSISOLatin1StringEncoding] forKey:@"inputMessage"];
     [filter setValue:([self.correctionLevel.uppercaseString isEqualToString:@"H"] ||
                       [self.correctionLevel.uppercaseString isEqualToString:@"L"] ||
                       [self.correctionLevel.uppercaseString isEqualToString:@"Q"]) ? self.correctionLevel.uppercaseString : @"M" forKey:@"inputCorrectionLevel"];
-    return filter.outputImage;
+    return [UIImage imageWithCIImage:filter.outputImage];
 }
+
+- (void)drawRect:(CGRect)rect;
+{
+    CGContextSetInterpolationQuality(UIGraphicsGetCurrentContext(), kCGInterpolationNone);
+    [self.qrImage drawInRect:AVMakeRectWithAspectRatioInsideRect(CGSizeMake(1, 1), rect)];
+}
+
 @end
