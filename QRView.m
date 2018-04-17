@@ -53,6 +53,8 @@
     CIImage *outputImage = self.outputImage;
     CGImageRef image = [CIContext.new createCGImage:outputImage fromRect:outputImage.extent];
     CGContextSetInterpolationQuality(UIGraphicsGetCurrentContext(), kCGInterpolationNone);
+    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1, -1);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0, -rect.size.height);
     CGContextDrawImage(UIGraphicsGetCurrentContext(), AVMakeRectWithAspectRatioInsideRect(CGSizeMake(1, 1), rect), image);
     CGImageRelease(image);
 }
